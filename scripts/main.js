@@ -2980,9 +2980,9 @@ define("guiprocessmanager", ["require", "exports", "colorreductionmanagement", "
                         // so I don't know why you would hide them
                         if (addColorLabels) {
                             const txt = document.createElementNS(xmlns, "text");
-                            txt.setAttribute("font-family", "Tahoma");
+                            txt.setAttribute("font-family", "Arial");
                             const nrOfDigits = (f.color + "").length;
-                            txt.setAttribute("font-size", (fontSize / nrOfDigits) + "");
+                            txt.setAttribute("font-size", (30*fontSize / (f.labelBounds.height * sizeMultiplier))+5*(Math.exp(f.labelBounds.height)/(Math.exp(f.labelBounds.height)+1)-1) + "");
                             txt.setAttribute("dominant-baseline", "middle");
                             txt.setAttribute("text-anchor", "middle");
                             txt.setAttribute("fill", fontColor);
