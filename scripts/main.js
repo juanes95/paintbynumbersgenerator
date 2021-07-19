@@ -2982,7 +2982,7 @@ define("guiprocessmanager", ["require", "exports", "colorreductionmanagement", "
                             const txt = document.createElementNS(xmlns, "text");
                             txt.setAttribute("font-family", "Arial");
                             const nrOfDigits = (f.color + "").length;
-                            txt.setAttribute("font-size", (30*fontSize / (f.labelBounds.height * sizeMultiplier))+5*(Math.exp(f.labelBounds.height)/(Math.exp(f.labelBounds.height)+1)-1) + "");
+                            txt.setAttribute("font-size", (60*fontSize / (f.labelBounds.height * sizeMultiplier))+10*(Math.exp(f.labelBounds.height)/(Math.exp(f.labelBounds.height)+1)-1) + "");
                             txt.setAttribute("dominant-baseline", "middle");
                             txt.setAttribute("text-anchor", "middle");
                             txt.setAttribute("fill", fontColor);
