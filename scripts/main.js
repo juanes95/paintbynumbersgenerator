@@ -1,3 +1,5 @@
+const COLOR_ALIASES = {"VE 1":[228,248,239],"VE 2":[134,175,69],"VE 3":[96,102,32],"VE 4":[31,74,57],"VE 5":[191,222,207],"VE 6":[85,106,75],"VE 7":[94,120,91],"VE 8":[150,133,55],"VE 9":[214,217,14],"VE 10":[0,136,50],"VE 11":[234,248,135],"VE 12":[23,206,79],"VE 13":[188,188,134],"VE 14":[85,188,57],"VE 15":[115,185,50],"VE 16":[208,240,95],"VE 17":[101,151,56],"VE 18":[190,185,0],"VE 19":[77,138,34],"VE 20":[2,119,66],"VE 21":[120,134,72],"VE 22":[133,116,47],"VE 23":[135,123,15],"VE 24":[168,195,118],"VE 25":[142,148,58],"VE 26":[109,96,62],"VE 27":[53,74,57],"VE 28":[78,140,117],"VE 58":[226,249,243],"VE 57":[221,242,105],"VE 31":[79,200,11],"VE 32":[142,185,166],"VE 33":[206,212,166],"VE 34":[194,202,155],"VE 35":[145,156,34],"VE 36":[106,218,196],"VE 37":[65,159,143],"VE 38":[220,250,212],"VE 39":[160,210,1],"VE 40":[231,237,3],"VE 41":[40,109,88],"VE 42":[212,225,208],"VE 43":[107,164,57],"VE 44":[0,184,174],"VE 45":[45,105,71],"VE 46":[174,175,143],"VE 47":[146,153,57],"VE 48":[172,164,89],"VE 49":[128,155,140],"VE 50":[125,139,90],"VE 51":[145,144,113],"VE 52":[70,76,66],"CF 1":[216,138,63],"CF 2":[143,74,58],"CF 3":[187,171,172],"CF 4":[115,908,72],"CF 5":[153,94,64],"CF 6":[84,64,57],"CF 7":[144,90,64],"CF 8":[246,157,115],"CF 9":[193,90,59],"CF 10":[138,88,53],"CF 11":[82,61,56],"CF 12":[198,187,191],"CF 13":[189,120,79],"CF 14":[175,128,102],"CF 15":[180,98,51],"CF 16":[193,109,45],"CF 17":[162,104,103],"CF 18":[170,90,53],"CF 19":[219,170,101],"CF 20":[181,167,140],"CF 21":[231,127,74],"CF 22":[201,107,37],"CF 23":[112,99,90],"CF 24":[110,87,81],"CF 25":[157,110,64],"CF 26":[221,151,81],"CF 27":[188,146,148],"CF 28":[180,129,66],"CF 29":[82,75,69],"CF 30":[145,118,73],"AM 1":[240,183,94],"AM 2":[229,212,38],"AM 3":[253,200,0],"AM 4":[255,241,39],"AM 5":[206,154,18],"AM 6":[252,247,85],"AM 7":[255,240,1],"AM 8":[253,245,0],"AM 9":[252,237,0],"AM 10":[253,236,68],"AM 11":[250,191,0],"AM 12":[251,190,13],"AM 13":[255,183,0],"AM 14":[253,224,0],"AM 15":[241,199,115],"AM 16":[251,189,26],"AM 17":[244,195,0],"AM 18":[230,183,17],"AM 19":[252,240,168],"AM 20":[250,249,185],"AM 21":[255,240,97],"AM 22":[216,138,27],"AM 23":[224,190,82],"AM 24":[197,155,73],"AM 25":[239,186,30],"AZ 1":[4,127,195],"AZ 2":[2,162,196],"AZ 3":[163,223,251],"AZ 4":[214,241,248],"AZ 5":[123,176,192],"AZ 6":[97,105,167],"AZ 7":[155,180,202],"AZ 8":[52,61,76],"AZ 9":[182,204,217],"AZ 10":[155,165,226],"AZ 11":[138,148,220],"AZ 12":[66,113,167],"AZ 13":[55,60,98],"AZ 14":[108,204,246],"AZ 15":[6,124,186],"AZ 16":[4,141,196],"AZ 17":[126,201,240],"AZ 18":[2,61,137],"AZ 19":[5,101,139],"AZ 20":[224,239,242],"AZ 21":[43,77,112],"AZ 22":[133,174,220],"AZ 23":[46,98,158],"AZ 24":[45,64,143],"AZ 25":[107,189,236],"AZ 26":[33,86,120],"AZ 27":[195,204,237],"AZ 28":[120,185,239],"AZ 29":[79,106,135],"AZ 30":[175,186,206],"AZ 31":[50,59,64],"AZ 32":[156,175,207],"AZ 33":[5,74,151],"AZ 34":[31,75,136],"AZ 35":[160,204,215],"AZ 36":[85,137,246],"AZ 37":[123,167,214],"AZ 38":[174,195,224],"AZ 39":[166,202,238],"AZ 40":[10,76,136],"AZ 41":[4,145,216],"AZ 42":[139,173,237],"AZ 43":[119,124,164],"AZ 44":[205,214,243],"AZ 45":[73,142,157],"AZ 46":[54,107,157],"AZ 47":[13,61,123],"AZ 48":[78,161,227],"AZ 49":[14,126,202],"AZ 50":[36,77,139],"AZ 51":[26,128,210],"AZ 52":[0,160,228],"AZ 53":[193,245,243],"AZ 54":[64,98,185],"AZ 55":[64,120,155],"AZ 56":[169,208,223],"AZ 57":[55,84,102],"AZ 58":[147,167,176],"AZ 59":[33,101,150],"AZ 60":[11,121,200],"AZ 61":[177,195,209],"AZ 62":[122,150,127],"AZ 63":[47,94,166],"RN 1":[247,49,46],"RN 2":[229,15,53],"RN 3":[197,52,67],"RN 4":[232,35,80],"RN 5":[252,69,73],"RN 6":[163,58,37],"RN 7":[248,87,95],"RN 8":[255,43,42],"RN 9":[228,16,74],"RN 10":[248,26,15],"RN 11":[253,120,1],"RN 12":[255,222,117],"RN 13":[255,156,5],"RN 14":[254,108,48],"RN 15":[216,81,26],"RN 16":[249,134,116],"RN 17":[248,152,91],"RN 18":[243,84,0],"RN 19":[253,186,131],"RN 20":[252,158,88],"RN 21":[181,69,57],"RN 22":[186,52,79],"RN 23":[251,102,70],"RN 24":[183,70,74],"RN 25":[159,77,79],"RN 26":[130,63,57],"RN 27":[173,97,109],"RN 28":[255,135,4],"GR 1":[160,165,169],"GR 2":[206,212,202],"GR 3":[98,99,104],"GR 4":[159,163,162],"GR 5":[208,210,207],"GR 6":[97,135,158],"GR 7":[132,137,140],"GR 8":[199,203,204],"GR 9":[184,86,183],"GR 10":[104,105,107],"GR 11":[234,236,235],"GR 12":[182,186,187],"GR 13":[245,247,244],"GR 14":[193,197,196],"GR 15":[192,193,198],"GR 16":[101,122,123],"GR 17":[143,149,139],"GR 18":[73,76,81],"GR 19":[203,207,208],"GR 20":[198,198,188],"GR 21":[225,228,217],"GR 22":[93,92,110],"GR 23":[232,231,226],"MO 1":[245,158,209],"MO 2":[94,71,65],"MO 3":[255,117,200],"MO 4":[255,166,177],"MO 5":[245,88,139],"MO 6":[253,168,209],"MO 7":[170,102,161],"MO 8":[150,51,80],"MO 9":[243,238,245],"MO 10":[185,166,185],"MO 11":[255,205,218],"MO 12":[69,70,75],"MO 13":[57,57,57],"MO 14":[253,192,208],"MO 15":[169,87,136],"MO 16":[222,116,139],"MO 17":[250,60,120],"MO 18":[212,158,194],"MO 19":[239,119,131],"MO 20":[194,75,143],"MO 21":[196,120,169],"MO 22":[204,83,134],"MO 23":[88,68,137],"MO 24":[210,29,98],"MO 25":[230,63,141],"MO 26":[255,207,236],"MO 27":[237,174,217],"MO 28":[229,227,238],"MO 29":[200,138,185],"CR 1":[252,200,187],"CR 2":[253,215,192],"CR 3":[251,234,208],"CR 4":[245,195,146],"CR 5":[253,245,199],"CR 6":[254,224,188],"CR 7":[252,226,203],"CR 8":[252,238,173],"CR 9":[242,203,174],"CR 10":[244,195,163],"CR 11":[241,210,164],"CR 12":[240,226,197],"CR 13":[248,251,196],"CR 14":[241,226,207],"CR 15":[248,237,209],"CR 16":[248,230,210],"CR 17":[252,233,190],"CR 18":[250,238,214],"CR 19":[253,203,170],"CR 20":[236,220,187],"CR 21":[220,151,120],"CR 22":[249,221,137],"CR 23":[244,218,169],"Ne":[9,9,17],"Bl":[242,242,231]};
+
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -281,7 +283,7 @@ define("settings", ["require", "exports"], function (require, exports) {
             this.kMeansMinDeltaDifference = 1;
             this.kMeansClusteringColorSpace = ClusteringColorSpace.RGB;
             this.kMeansColorRestrictions = [];
-            this.colorAliases = {};
+            this.colorAliases = COLOR_ALIASES;
             this.narrowPixelStripCleanupRuns = 3; // 3 seems like a good compromise between removing enough narrow pixel strips to convergence. This fixes e.g. https://i.imgur.com/dz4ANz1.png
             this.removeFacetsSmallerThanNrOfPoints = 20;
             this.removeFacetsFromLargeToSmall = true;
@@ -3098,6 +3100,9 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
                         settings.kMeansColorRestrictions.push([red, green, blue]);
                     }
                 }
+                else if (rgbparts.length === 1) {
+                    settings.kMeansColorRestrictions.push(rgbparts[0])
+                }
             }
         }
         return settings;
@@ -3148,11 +3153,18 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
         });
     }
     exports.updateOutput = updateOutput;
+    function findKeyByValue(object,value) {
+            for (const key in object) {
+                if (value.toString() === object[key].toString()) {
+                    return key
+                }
+            }
+    }
     function createPaletteHtml(colorsByIndex) {
         let html = "";
         for (let c = 0; c < colorsByIndex.length; c++) {
             const style = "background-color: " + `rgb(${colorsByIndex[c][0]},${colorsByIndex[c][1]},${colorsByIndex[c][2]})`;
-            html += `<div class="color" class="tooltipped" style="${style}" data-tooltip="${colorsByIndex[c][0]},${colorsByIndex[c][1]},${colorsByIndex[c][2]}">${c}</div>`;
+            html += `<div class="color" class="tooltipped" style="${style}" data-tooltip="${findKeyByValue(COLOR_ALIASES,colorsByIndex[c])}:${colorsByIndex[c][0]},${colorsByIndex[c][1]},${colorsByIndex[c][2]}">${c}</div>`;
         }
         return $(html);
     }
@@ -3165,7 +3177,7 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
         const nrOfItemsPerRow = 10;
         const nrRows = Math.ceil(colorsByIndex.length / nrOfItemsPerRow);
         const margin = 10;
-        const cellWidth = 80;
+        const cellWidth = 100;
         const cellHeight = 70;
         canvas.width = margin + nrOfItemsPerRow * (cellWidth + margin);
         canvas.height = margin + nrRows * (cellHeight + margin);
@@ -3191,7 +3203,7 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
             ctx.fillText(nrText, x + cellWidth / 2 - nrTextSize.width / 2, y + cellHeight / 2 - 5);
             ctx.lineWidth = 1;
             ctx.font = "10px Tahoma";
-            const rgbText = "RGB: " + Math.floor(color[0]) + "," + Math.floor(color[1]) + "," + Math.floor(color[2]);
+            const rgbText = findKeyByValue(COLOR_ALIASES,color) + " RGB: " + Math.floor(color[0]) + "," + Math.floor(color[1]) + "," + Math.floor(color[2]);
             const rgbTextSize = ctx.measureText(rgbText);
             ctx.fillStyle = "black";
             ctx.fillText(rgbText, x + cellWidth / 2 - rgbTextSize.width / 2, y + cellHeight - 10);
@@ -3398,6 +3410,7 @@ define("main", ["require", "exports", "gui", "lib/clipboard"], function (require
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     $(document).ready(function () {
+        $("#txtKMeansColorRestrictions").val(Object.keys(COLOR_ALIASES).join('\n'));
         $(".tabs").tabs();
         $(".tooltipped").tooltip();
         const clip = new clipboard_1.Clipboard("canvas", true);
