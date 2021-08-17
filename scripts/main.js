@@ -3164,7 +3164,7 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
         let html = "";
         for (let c = 0; c < colorsByIndex.length; c++) {
             const style = "background-color: " + `rgb(${colorsByIndex[c][0]},${colorsByIndex[c][1]},${colorsByIndex[c][2]})`;
-            html += `<div class="color" class="tooltipped" style="${style}" data-tooltip="${findKeyByValue(COLOR_ALIASES,colorsByIndex[c])}:${colorsByIndex[c][0]},${colorsByIndex[c][1]},${colorsByIndex[c][2]}">${c}</div>`;
+            html += `<div class="color" class="tooltipped" style="${style}" data-tooltip="${findKeyByValue(COLOR_ALIASES,colorsByIndex[c])}: ${colorsByIndex[c][0]},${colorsByIndex[c][1]},${colorsByIndex[c][2]}">${c}</div>`;
         }
         return $(html);
     }
