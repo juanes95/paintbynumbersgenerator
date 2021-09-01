@@ -27,6 +27,7 @@ The settings contain mostly the same settings in the web version:
               "A3": [            0,            255,            0        ],
           }
         ```
+ - Default colorAliases: The list of default colors is located in the first line of `scripts/main.js`
  - removeFacetsSmallerThanNrOfPoints: removes any facets that are smaller than the given amount of pixels. Lowering the value will create more detailed results but might be much harder to actually paint due to their size.
  - removeFacetsFromLargeToSmall (true/false): largest to smallest will prevent boundaries from warping the shapes because the smaller facets act as border anchorpoints but can be considerably slower
  - maximumNumberOfFacets: if there are more facets than the given maximum number, keep removing the smallest facets until the limit is reached
