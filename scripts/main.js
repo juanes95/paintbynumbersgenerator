@@ -362,9 +362,10 @@ define("colorreductionmanagement", ["require", "exports", "common", "lib/cluster
         static createColorMap(kmeansImgData) {
             const imgColorIndices = new typedarrays_1.Uint8Array2D(kmeansImgData.width, kmeansImgData.height);
             let colorIndex = 0;
-            const colors = {};
+            let colors = {};
             const colorsByIndex = [];
             let idx = 0;
+            /*
             for (let j = 0; j < kmeansImgData.height; j++) {
                 for (let i = 0; i < kmeansImgData.width; i++) {
                     const r = kmeansImgData.data[idx++];
@@ -385,6 +386,48 @@ define("colorreductionmanagement", ["require", "exports", "common", "lib/cluster
                     imgColorIndices.set(i, j, currentColorIndex);
                 }
             }
+            */
+            for (let j = 0; j < kmeansImgData.height; j++) {
+                for (let i = 0; i < kmeansImgData.width; i++) {
+                    const r = kmeansImgData.data[idx++];
+                    const g = kmeansImgData.data[idx++];
+                    const b = kmeansImgData.data[idx++];
+                    const a = kmeansImgData.data[idx++];
+                    const color = r + "," + g + "," + b;
+                    if (typeof colors[color] === "undefined") {
+                        colors[color] = colorIndex;
+                        colorsByIndex.push([r, g, b]);
+                        colorIndex++;
+                    }
+                }
+            }
+            colors={};
+            idx = 0;
+            for (let j = 0; j < kmeansImgData.height; j++) {
+                for (let i = 0; i < kmeansImgData.width; i++) {
+                    const r = kmeansImgData.data[idx++];
+                    const g = kmeansImgData.data[idx++];
+                    const b = kmeansImgData.data[idx++];
+                    const a = kmeansImgData.data[idx++];
+                    let currentColorIndex = 0;
+                    const color = r + "," + g + "," + b;
+                    if (typeof colors[color] === "undefined") {
+                        for(currentColorIndex = 0; currentColorIndex < colorsByIndex.length; currentColorIndex++){
+                            if (color === colorsByIndex[currentColorIndex].join(",")){
+                                break
+                            }
+                        };
+                        colors[color] = currentColorIndex;
+                    }
+                    else {
+                        currentColorIndex = colors[color];
+                    }
+                    imgColorIndices.set(i, j, currentColorIndex);
+                }
+            }
+            console.log(imgColorIndices)
+
+            
             const result = new ColorMapResult();
             result.imgColorIndices = imgColorIndices;
             result.colorsByIndex = colorsByIndex;
@@ -3115,6 +3158,7 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
                 cancellationToken.isCancelled = true;
                 cancellationToken = new common_8.CancellationToken();
                 processResult = yield guiprocessmanager_1.GUIProcessManager.process(settings, cancellationToken);
+                console.log(processResult)
                 yield updateOutput();
                 const tabsOutput = M.Tabs.getInstance(document.getElementById("tabsOutput"));
                 tabsOutput.select("output-pane");
@@ -3144,7 +3188,7 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
                     $("#statusSVGGenerate").css("width", Math.round(progress * 100) + "%");
                 });
                 $("#svgContainer").empty().append(svg);
-                $("#palette").empty().append(createPaletteHtml(processResult.colorsByIndex));
+                $("#palette").empty().append(createPaletteHtml(processResult.colorsByIndex,processResult.facetResult));
                 $("#palette .color").tooltip();
                 $(".status").removeClass("active");
                 $(".status.SVGGenerate").addClass("complete");
@@ -3152,6 +3196,7 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
         });
     }
     exports.updateOutput = updateOutput;
+
     function findKeyByValue(object,value) {
             for (const key in object) {
                 if (value.toString() === object[key].toString()) {
@@ -3159,11 +3204,53 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
                 }
             }
     }
-    function createPaletteHtml(colorsByIndex) {
+
+    // Determine if a color is light or dark
+    function isLightOrDark(rgbColor) {
+        const hsp = Math.sqrt(0.299*(rgbColor[0]*rgbColor[0])+0.587*(rgbColor[1]*rgbColor[1])+0.114*(rgbColor[2]*rgbColor[2]))
+        if (hsp > 127.5){
+            return true
+        } else {
+            return false
+        }
+    }
+
+    // calculate the area percentage of each color
+    function areaPercentage(colorsByIndex,facetResult){
+        const colorFrequency = [];
+        for (const color of colorsByIndex) {
+            colorFrequency.push(0);
+        }
+        for (const facet of facetResult.facets) {
+            if (facet !== null) {
+                colorFrequency[facet.color] += facet.pointCount;
+            }
+        }
+        const totalFrequency = colorFrequency.reduce((sum, val) => sum + val);
+        const areaPercentageArray = colorsByIndex.map((color, index) => colorFrequency[index] / totalFrequency);
+        return areaPercentageArray
+    }
+
+    function createPaletteHtml(colorsByIndex,facetResult) {
         let html = "";
+        const lightScaler = 144;
+        const darkScaler = 222;
+        let scaler = 1;
+        const canvasSize = parseInt($("#txtCanvasSize").val() + "");
+        const area = areaPercentage(colorsByIndex,facetResult);
         for (let c = 0; c < colorsByIndex.length; c++) {
             const style = "background-color: " + `rgb(${colorsByIndex[c][0]},${colorsByIndex[c][1]},${colorsByIndex[c][2]})`;
-            html += `<div class="color" class="tooltipped" style="${style}" data-tooltip="${findKeyByValue(COLOR_ALIASES,colorsByIndex[c])}: ${colorsByIndex[c][0]},${colorsByIndex[c][1]},${colorsByIndex[c][2]}">${c}</div>`;
+            if (isLightOrDark([colorsByIndex[c][0],colorsByIndex[c][1],colorsByIndex[c][2]])){
+                scaler = lightScaler;
+            } else {
+                scaler = darkScaler;
+            }
+            html += `<div class="color" class="tooltipped" style="${style}" data-tooltip="${findKeyByValue(COLOR_ALIASES,colorsByIndex[c])}  `;
+            html += `${(2.5*canvasSize*area[c]/scaler).toFixed(2)}ml">${c}</div>`;
+            /** 
+             * Add the following to html to include the RGB code
+             *(${colorsByIndex[c][0]},${colorsByIndex[c][1]},${colorsByIndex[c][2]}) &#013;
+            */
         }
         return $(html);
     }
@@ -3178,6 +3265,11 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
         const margin = 10;
         const cellWidth = 100;
         const cellHeight = 70;
+        const lightScaler = 144;
+        const darkScaler = 222;
+        let scaler = 1;
+        const canvasSize = parseInt($("#txtCanvasSize").val() + "");
+        const area = areaPercentage(colorsByIndex,processResult.facetResult);
         canvas.width = margin + nrOfItemsPerRow * (cellWidth + margin);
         canvas.height = margin + nrRows * (cellHeight + margin);
         const ctx = canvas.getContext("2d");
@@ -3202,7 +3294,16 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
             ctx.fillText(nrText, x + cellWidth / 2 - nrTextSize.width / 2, y + cellHeight / 2 - 5);
             ctx.lineWidth = 1;
             ctx.font = "10px Tahoma";
-            const rgbText = findKeyByValue(COLOR_ALIASES,color) + " RGB: " + Math.floor(color[0]) + "," + Math.floor(color[1]) + "," + Math.floor(color[2]);
+            if (isLightOrDark([colorsByIndex[i][0],colorsByIndex[i][1],colorsByIndex[i][2]])){
+                scaler = lightScaler;
+            } else {
+                scaler = darkScaler;
+            }
+            const rgbText = findKeyByValue(COLOR_ALIASES,color)+ " (" + (2.5*canvasSize*area[i]/scaler).toFixed(2)+ "ml )";
+            /**
+             * Add the following to rgbText to include the RGB code
+             * + " (" + Math.floor(color[0]) + "," + Math.floor(color[1]) + "," + Math.floor(color[2])+ ")"
+             */
             const rgbTextSize = ctx.measureText(rgbText);
             ctx.fillStyle = "black";
             ctx.fillText(rgbText, x + cellWidth / 2 - rgbTextSize.width / 2, y + cellHeight - 10);
