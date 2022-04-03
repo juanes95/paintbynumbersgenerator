@@ -363,7 +363,9 @@ define("colorreductionmanagement", ["require", "exports", "common", "lib/cluster
             const imgColorIndices = new typedarrays_1.Uint8Array2D(kmeansImgData.width, kmeansImgData.height);
             let colorIndex = 0;
             let colors = {};
-            const colorsByIndex = [];
+            let colorsByIndex = [];
+            const colorsKeys = [];
+            const colorsKeysSorted = [];
             let idx = 0;
             /*
             for (let j = 0; j < kmeansImgData.height; j++) {
@@ -401,6 +403,40 @@ define("colorreductionmanagement", ["require", "exports", "common", "lib/cluster
                     }
                 }
             }
+
+            function findKeyByValue(object,value) {
+                for (const key in object) {
+                    if (value.toString() === object[key].toString()) {
+                        return key
+                    }
+                }
+            }
+            function findValueByKey(object,value) {
+                for (const key in object) {
+                    if (value === key) {
+                        return object[key]
+                    }
+                }
+            }
+
+            for (let c = 0; c < colorsByIndex.length; c++) {
+                colorsKeys.push(findKeyByValue(COLOR_ALIASES,colorsByIndex[c]))
+            }
+
+            for (var key in COLOR_ALIASES){
+                for (let c = 0; c < colorsKeys.length; c++) {
+                    if (colorsKeys[c] === key){
+                        colorsKeysSorted.push(key)
+                    }
+                }
+            }
+
+            colorsByIndex = [];
+
+            for (let c = 0; c < colorsKeys.length; c++) {
+                colorsByIndex.push(findValueByKey(COLOR_ALIASES,colorsKeysSorted[c]))
+            }
+        
             colors={};
             idx = 0;
             for (let j = 0; j < kmeansImgData.height; j++) {
@@ -423,16 +459,15 @@ define("colorreductionmanagement", ["require", "exports", "common", "lib/cluster
                         currentColorIndex = colors[color];
                     }
                     imgColorIndices.set(i, j, currentColorIndex);
-                }
+                }   
             }
-            console.log(imgColorIndices)
-
-            
+                       
             const result = new ColorMapResult();
             result.imgColorIndices = imgColorIndices;
             result.colorsByIndex = colorsByIndex;
             result.width = kmeansImgData.width;
             result.height = kmeansImgData.height;
+            
             return result;
         }
         /**
