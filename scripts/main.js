@@ -3295,26 +3295,26 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
         }
         const colorsByIndex = processResult.colorsByIndex;
         const canvas = document.createElement("canvas");
-        const nrOfItemsPerRow = 10;
+        const nrOfItemsPerRow = 1;
         const nrRows = Math.ceil(colorsByIndex.length / nrOfItemsPerRow);
-        const margin = 10;
-        const cellWidth = 100;
-        const cellHeight = 70;
+        const margin = 15;
+        const cellWidth = 50;
+        const cellHeight = 50;
         const lightScaler = 144;
         const darkScaler = 222;
         let scaler = 1;
         const canvasSize = parseInt($("#txtCanvasSize").val() + "");
         const area = areaPercentage(colorsByIndex,processResult.facetResult);
-        canvas.width = margin + nrOfItemsPerRow * (cellWidth + margin);
-        canvas.height = margin + nrRows * (cellHeight + margin);
+        canvas.width = margin + nrOfItemsPerRow * (4*cellWidth + margin - 10);
+        canvas.height = margin + nrRows * (cellHeight + margin - 20);
         const ctx = canvas.getContext("2d");
         ctx.translate(0.5, 0.5);
         ctx.fillStyle = "white";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         for (let i = 0; i < colorsByIndex.length; i++) {
             const color = colorsByIndex[i];
-            const x = margin + (i % nrOfItemsPerRow) * (cellWidth + margin);
-            const y = margin + Math.floor(i / nrOfItemsPerRow) * (cellHeight + margin);
+            const x = margin + (i % nrOfItemsPerRow) * (cellWidth + margin + 10);
+            const y = margin + Math.floor(i / nrOfItemsPerRow) * (cellHeight + margin - 20);
             ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
             ctx.fillRect(x, y, cellWidth, cellHeight - 20);
             ctx.strokeStyle = "#888";
@@ -3322,26 +3322,26 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
             const nrText = i + "";
             ctx.fillStyle = "black";
             ctx.strokeStyle = "#CCC";
-            ctx.font = "20px Tahoma";
+            ctx.font = "15px Tahoma";
             const nrTextSize = ctx.measureText(nrText);
             ctx.lineWidth = 2;
             ctx.strokeText(nrText, x + cellWidth / 2 - nrTextSize.width / 2, y + cellHeight / 2 - 5);
             ctx.fillText(nrText, x + cellWidth / 2 - nrTextSize.width / 2, y + cellHeight / 2 - 5);
             ctx.lineWidth = 1;
-            ctx.font = "10px Tahoma";
+            ctx.font = "15px Tahoma";
             if (isLightOrDark([colorsByIndex[i][0],colorsByIndex[i][1],colorsByIndex[i][2]])){
                 scaler = lightScaler;
             } else {
                 scaler = darkScaler;
             }
-            const rgbText = findKeyByValue(COLOR_ALIASES,color)+ " (" + (2.5*canvasSize*area[i]/scaler).toFixed(2)+ "ml )";
+            const rgbText1 = findKeyByValue(COLOR_ALIASES,color) + "  (" + (2.5*canvasSize*area[i]/scaler).toFixed(2)+ " ml)";
             /**
              * Add the following to rgbText to include the RGB code
              * + " (" + Math.floor(color[0]) + "," + Math.floor(color[1]) + "," + Math.floor(color[2])+ ")"
              */
-            const rgbTextSize = ctx.measureText(rgbText);
+            const rgbTextSize1 = ctx.measureText(rgbText1);
             ctx.fillStyle = "black";
-            ctx.fillText(rgbText, x + cellWidth / 2 - rgbTextSize.width / 2, y + cellHeight - 10);
+            ctx.fillText(rgbText1, x + 1.25*cellWidth , y + cellHeight / 2 - 5);
         }
         const dataURL = canvas.toDataURL("image/png");
         const dl = document.createElement("a");
