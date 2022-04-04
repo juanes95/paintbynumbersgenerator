@@ -3295,6 +3295,48 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
         }
         const colorsByIndex = processResult.colorsByIndex;
         const canvas = document.createElement("canvas");
+        const nrOfItemsPerRow = 10;
+        const nrRows = Math.ceil(colorsByIndex.length / nrOfItemsPerRow);
+        const margin = 10;
+        const cellWidth = 80;
+        const cellHeight = 70;
+        canvas.width = margin + nrOfItemsPerRow * (cellWidth + margin);
+        canvas.height = margin + nrRows * (cellHeight + margin);
+        const ctx = canvas.getContext("2d");
+        ctx.translate(0.5, 0.5);
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < colorsByIndex.length; i++) {
+            const color = colorsByIndex[i];
+            const x = margin + (i % nrOfItemsPerRow) * (cellWidth + margin);
+            const y = margin + Math.floor(i / nrOfItemsPerRow) * (cellHeight + margin);
+            ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            ctx.fillRect(x, y, cellWidth, cellHeight - 20);
+            ctx.strokeStyle = "#888";
+            ctx.strokeRect(x, y, cellWidth, cellHeight - 20);
+            const nrText = i + "";
+            ctx.fillStyle = "black";
+            ctx.strokeStyle = "#CCC";
+            ctx.font = "25px Tahoma";
+            const nrTextSize = ctx.measureText(nrText);
+            ctx.lineWidth = 2;
+            ctx.strokeText(nrText, x + cellWidth / 2 - nrTextSize.width / 2, y + cellHeight / 2 );
+            ctx.fillText(nrText, x + cellWidth / 2 - nrTextSize.width / 2, y + cellHeight / 2 );
+        }
+        const dataURL = canvas.toDataURL("image/png");
+        const dl = document.createElement("a");
+        document.body.appendChild(dl);
+        dl.setAttribute("href", dataURL);
+        dl.setAttribute("download", "palette.png");
+        dl.click();
+    }
+    exports.downloadPalettePng = downloadPalettePng;
+    function downloadCataloguePng() {
+        if (processResult == null) {
+            return;
+        }
+        const colorsByIndex = processResult.colorsByIndex;
+        const canvas = document.createElement("canvas");
         const nrOfItemsPerRow = 1;
         const nrRows = Math.ceil(colorsByIndex.length / nrOfItemsPerRow);
         const margin = 15;
@@ -3335,10 +3377,6 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
                 scaler = darkScaler;
             }
             const rgbText1 = findKeyByValue(COLOR_ALIASES,color) + "  (" + (2.5*canvasSize*area[i]/scaler).toFixed(2)+ " ml)";
-            /**
-             * Add the following to rgbText to include the RGB code
-             * + " (" + Math.floor(color[0]) + "," + Math.floor(color[1]) + "," + Math.floor(color[2])+ ")"
-             */
             const rgbTextSize1 = ctx.measureText(rgbText1);
             ctx.fillStyle = "black";
             ctx.fillText(rgbText1, x + 1.25*cellWidth , y + cellHeight / 2 - 5);
@@ -3347,10 +3385,10 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
         const dl = document.createElement("a");
         document.body.appendChild(dl);
         dl.setAttribute("href", dataURL);
-        dl.setAttribute("download", "palette.png");
+        dl.setAttribute("download", "catalogue.png");
         dl.click();
     }
-    exports.downloadPalettePng = downloadPalettePng;
+    exports.downloadCataloguePng = downloadCataloguePng;
     function downloadPNG() {
         if ($("#svgContainer svg").length > 0) {
             saveSvgAsPng($("#svgContainer svg").get(0), "paintbynumbers.png");
@@ -3592,6 +3630,9 @@ define("main", ["require", "exports", "gui", "lib/clipboard"], function (require
         });
         $("#btnDownloadPalettePNG").click(function () {
             gui_2.downloadPalettePng();
+        });
+        $("#btndownloadCataloguePNG").click(function () {
+            gui_2.downloadCataloguePng();
         });
         $("#lnkTrivial").click(() => { gui_2.loadExample("imgTrivial"); return false; });
         $("#lnkSmall").click(() => { gui_2.loadExample("imgSmall"); return false; });
